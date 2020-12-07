@@ -127,9 +127,11 @@ bool isValid(string data) {
 	return true;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 
-	string fileName = "data2.csv"; // Specify your filename here. We can even turn it into a commandline arg or console input.
+	if (argc < 2) { cout << "Did you forget to input your filename?"; return 1; }
+
+	string fileName = argv[1]; // Reads filename from cmdline
 
 	ifstream fileStr(fileName, ios::in); // Opens file. Checks if file is opened. Errors otherwise.
 	if (!fileStr) {
@@ -191,7 +193,7 @@ int main() {
 
 	//cout << "There was " << errorCount << " line(s) with an error"; // DEBUG. If it hasn't thrown an error yet (it passed the stof test), the data should be clean.
 
-	// Do your calculations below here. You've got the two arrays. Should be clean. Use currentLine for array size
+	// Do your calculations below here. You've got the two arrays. Should be clean. Use actualArraySize for array size
 
 	fileStr.close(); // Close the file since we've already got the arrays
 
@@ -226,10 +228,6 @@ int main() {
 	double madX = mad(xArrPtr, actualArraySize);
 	double madY = mad(yArrPtr, actualArraySize);
 	cout << setprecision(10) << "mad_X= " << madX << " - mad_Y = " << madY << endl;
-
-	double arr[] = { 34,21,56,76,45,11 };
-	int size = sizeof(arr) / sizeof(arr[0]);
-	cout << mad(arr, size);
 
 	// ADD YOUR NAMES HERE
 	cout << endl;
