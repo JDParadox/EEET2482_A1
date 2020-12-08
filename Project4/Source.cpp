@@ -1,9 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <algorithm>
 #include <math.h>
-
 
 //#include <vector> // TEMPORARY INCLUSION FOR TESTING. ISN'T ACTUALLY USED IN PROGRAM
 //#include <sstream>
@@ -23,9 +21,24 @@ string split(string inStr, bool isX) {
 			res = inStr.erase(0, found + 1);
 		}
 	}
-
-	// cout << res;
 	return res;
+}
+
+void insertionSort(double* arr, int size) {
+	//sorts an array using insertion sort alg
+
+	double temp;
+	int j;
+
+	for (int i = 1; i < size; i++) {
+		temp = arr[i]; // takes value
+		j = i;
+		while (j > 0 && arr[j - 1] > temp) {
+			arr[j] = arr[j - 1];
+			j--;
+		}
+		arr[j] = temp;   // inserts in right place
+	}
 }
 
 double mean(double arr[], int size) { 
@@ -42,10 +55,12 @@ double mean(double arr[], int size) {
 	return res;
 }
 
-double median(double arr[], int size) {
+double median(double arr[], int size, bool sorted) {
 	//Calculates the median of an array
 	
-	sort(arr, arr + size); // If we're not allowed to sort using the inbuilt algorithm, we'll have to code a sorting algorithm ourselves
+	if (!sorted) {
+		insertionSort(arr, size); // Sorts the array if it's not sorted
+	}
 	
 	if (size % 2 == 0)
 		return (arr[size / 2 - 1] + arr[size / 2]) / 2;
@@ -53,11 +68,12 @@ double median(double arr[], int size) {
 	return arr[size / 2];
 }
 
-double mode(double arr[], int n) {
+double mode(double arr[], int n, bool sorted) {
 	//Calculate the mode of an array
 
-	// Sort the array 
-	sort(arr, arr + n);
+	if (!sorted) {
+		insertionSort(arr, n); // Sorts the array if it's not sorted
+	}
 
 	//finding max frequency  
 	int max_count = 1, res = arr[0], count = 1;
@@ -213,19 +229,22 @@ int main(int argc, char* argv[]) {
 	cout << "Printing results for file " << fileName << endl;
 	cout.precision(10); // Setting precision to display floats more accurately
 
+	insertionSort(xArrPtr, actualArraySize); // Presort the arrays to save time, so we don't have to sort it twice when calculating median and mode
+	insertionSort(yArrPtr, actualArraySize);
+
 	// Mean calc and display
 	double meanX = mean(xArrPtr, actualArraySize);
 	double meanY = mean(yArrPtr, actualArraySize);
 	cout << "mean_X= " << meanX << " - mean_Y = " << meanY << endl; // Tested against google sheets (imported the csv file, told it to calc the average for a column. Works)
 
 	// Median calc and display
-	double medianX = median(xArrPtr, actualArraySize);
-	double medianY = median(yArrPtr, actualArraySize);
+	double medianX = median(xArrPtr, actualArraySize, true);
+	double medianY = median(yArrPtr, actualArraySize, true);
 	cout << "median_X= " << medianX << " - median_Y = " << medianY << endl;
 
 	// Mode calc and display
-	double modeX = mode(xArrPtr, actualArraySize);
-	double modeY = mode(yArrPtr, actualArraySize);
+	double modeX = mode(xArrPtr, actualArraySize, true);
+	double modeY = mode(yArrPtr, actualArraySize, true);
 	cout << "mode_X= " << modeX << " - mode_Y = " << modeY << endl;
 
 	// Variance calc and display
