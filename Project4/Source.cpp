@@ -1,14 +1,32 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
-#include <iomanip>
 #include <algorithm>
 #include <math.h>
 
+
 //#include <vector> // TEMPORARY INCLUSION FOR TESTING. ISN'T ACTUALLY USED IN PROGRAM
+//#include <sstream>
 
 using namespace std;
+
+string split(string inStr, bool isX) {
+	// Function splits a string at the delimiter
+	string res;
+	
+	size_t found = inStr.find(',');
+	if (found != string::npos) {
+		if (isX) {
+			res = inStr.erase(found, -1);
+		}
+		else {
+			res = inStr.erase(0, found + 1);
+		}
+	}
+
+	// cout << res;
+	return res;
+}
 
 double mean(double arr[], int size) { 
 	// Calculates the mean of an array
@@ -160,19 +178,14 @@ int main(int argc, char* argv[]) {
 	int errorCount = 0;
 	int actualArraySize = 0;
 	while (getline(fileStr, dataLine)) {
-		stringstream dataLineStr(dataLine);
 
-		string x; // temp values to contain x and y
-		string y;
+		string x = split(dataLine, true); // True here means isX
+		string y = split(dataLine, false);
 
 		bool lineOk = true;
-		getline(dataLineStr, x, ','); // Get X
 		if (!isValid(x)) lineOk = false; // Checks if X is okay, else flag the line
-
-		getline(dataLineStr, y, ','); //Get Y
 		if (!isValid (y)) lineOk = false; // Checks if Y is okay, else flag the line
 
-			
 		if (lineOk) { // If the line is good, put x and y into the array and increase the arraySize counter
 			xArrPtr[actualArraySize] = stod(x);
 			yArrPtr[actualArraySize] = stod(y);
@@ -198,36 +211,37 @@ int main(int argc, char* argv[]) {
 	fileStr.close(); // Close the file since we've already got the arrays
 
 	cout << "Printing results for file " << fileName << endl;
+	cout.precision(10); // Setting precision to display floats more accurately
 
 	// Mean calc and display
 	double meanX = mean(xArrPtr, actualArraySize);
 	double meanY = mean(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "mean_X= " << meanX << " - mean_Y = " << meanY << endl; // Tested against google sheets (imported the csv file, told it to calc the average for a column. Works)
+	cout << "mean_X= " << meanX << " - mean_Y = " << meanY << endl; // Tested against google sheets (imported the csv file, told it to calc the average for a column. Works)
 
 	// Median calc and display
 	double medianX = median(xArrPtr, actualArraySize);
 	double medianY = median(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "median_X= " << medianX << " - median_Y = " << medianY << endl;
+	cout << "median_X= " << medianX << " - median_Y = " << medianY << endl;
 
 	// Mode calc and display
 	double modeX = mode(xArrPtr, actualArraySize);
 	double modeY = mode(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "mode_X= " << modeX << " - mode_Y = " << modeY << endl;
+	cout << "mode_X= " << modeX << " - mode_Y = " << modeY << endl;
 
 	// Variance calc and display
 	double varianceX = variance(xArrPtr, actualArraySize);
 	double varianceY = variance(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "var_X= " << varianceX << " - var_Y = " << varianceY << endl;
+	cout << "var_X= " << varianceX << " - var_Y = " << varianceY << endl;
 
 	// Standard deviation calc and display
 	double stdevX = stdev(xArrPtr, actualArraySize);
 	double stdevY = stdev(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "stdev_X= " << stdevX << " - stdev_Y = " << stdevY << endl;
+	cout << "stdev_X= " << stdevX << " - stdev_Y = " << stdevY << endl;
 
 	// Mad deviation calc and display
 	double madX = mad(xArrPtr, actualArraySize);
 	double madY = mad(yArrPtr, actualArraySize);
-	cout << setprecision(10) << "mad_X= " << madX << " - mad_Y = " << madY << endl;
+	cout << "mad_X= " << madX << " - mad_Y = " << madY << endl;
 
 	// ADD YOUR NAMES HERE
 	cout << endl;
